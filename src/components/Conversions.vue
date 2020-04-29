@@ -1,6 +1,6 @@
 <template lang="html">
-  <div class="">
-  <form class="" v-on:submit.prevent>
+  <div class="contain">
+  <!-- <form class="" v-on:submit.prevent>
     <p>Convert Euros</p>
     <div>
       <label for="euros">Type in amount of Euros</label>
@@ -15,9 +15,9 @@
   </form>
 
   <p>Result: {{resultTo}}</p>
-  <button v-on:click="pinEuroToCurrency" type="button" name="button">Pin Conversion</button>
+  <button v-on:click="pinEuroToCurrency" type="button" name="button">Pin Conversion</button> -->
 
-  <form v-on:submit.prevent>
+  <!-- <form v-on:submit.prevent>
     <div class="">
       <p>Convert to Euros</p>
       <label for="">Select Currency</label>
@@ -32,33 +32,49 @@
   </form>
 
   <p>Result: {{resultFrom}}</p>
-  <button v-on:click="pinCurrencyToEuro" type="button" name="button">Pin Conversion</button>
+  <button v-on:click="pinCurrencyToEuro" type="button" name="button">Pin Conversion</button> -->
 
 
   <div class="">
     <form class="" v-on:submit.prevent>
-      <div class="">
-        <p>Convert Currencies</p>
-        <label for="">Select Currency 1</label>
-        <select v-model="base1" name="">
-          <option disabled value="">Choose Currency</option>
-          <option v-for="(conversionRate, currencyName) of conversionRates" :value="{name: currencyName, value: conversionRate}">{{currencyName}}</option>
-        </select>
-        <input v-model="valueNonBase"type="number" name="" value="0">
-        <label for="">Select Currency 2</label>
-        <select v-model="base2" class="" name="">
-          <option disabled value="">Choose Currency</option>
-          <option v-for="(conversionRate, currencyName) of conversionRates" :value="{name: currencyName, value: conversionRate}">{{currencyName}}</option>
-        </select>
+      <!-- <p>Convert Currencies</p> -->
+      <div class="content">
+        <div class="select">
+          <label for="">Select Currency 1</label>
+          <select v-model="base1" name="">
+            <option disabled value=""></option>
+            <option v-for="(conversionRate, currencyName) of conversionRates" :value="{name: currencyName, value: conversionRate}">{{currencyName}}</option>
+          </select>
+        </div>
+        <br>
+        <div class="select">
+          <label for="">Enter Value</label>
+          <input v-model="valueNonBase"type="number" name="" value="0">
+        </div>
+        <br>
+        <div class="select">
+          <label for="">Select Currency 2</label>
+          <select v-model="base2" class="" name="">
+            <option disabled value=""></option>
+            <option v-for="(conversionRate, currencyName) of conversionRates" :value="{name: currencyName, value: conversionRate}">{{currencyName}}</option>
+          </select>
+        </div>
+
       </div>
+      <br>
+      <br>
       <button v-on:click="handleConversionWithoutBase" type="submit" name="button">Convert</button>
+      <br>
+
+      <p v-if="nonBaseResult"> Result:<span v-if="nonBaseResult"> {{this.base1name + " " + this.base1value + " = " + this.base2name + " " + this.nonBaseResult}} </span></p>
     </form>
+    <hr>
   </div>
-
-  <p>Result: {{nonBaseResult}}</p>
-  <button v-on:click="pinNonBase" type="button" name="button">Pin Conversion</button>
-
-  <p>Pinned: {{pinned}}</p>
+  <br>
+  <button v-if="nonBaseResult" v-on:click="pinNonBase" type="button" name="button">Pin Conversion</button>
+  <!-- <hr> -->
+  <br>
+  <p v-for="pin of pinned">{{pin}}</p>
 
   </div>
 
@@ -80,6 +96,9 @@ export default {
       base2: null,
       valueNonBase: null,
       nonBaseResult: null,
+      base1name: null,
+      base1value: null,
+      base2name: null,
       pinned: []
     }
   },
@@ -92,11 +111,17 @@ export default {
       this.resultFrom = (this.eurosFrom / this.eurosFromConversionRate.value).toFixed(2);
     },
     handleConversionWithoutBase: function() {
+      this.base2name = this.base2.name
+      this.base1name = this.base1.name
+      this.base1value = this.valueNonBase
       this.nonBaseResult = ((this.valueNonBase / this.base1.value) * (this.base2.value)).toFixed(2);
+      this.valueNonBase = ""
+      this.base1 = ""
+      this.base2 = ""
       // <!-- (input / base1rate) * (base2rate) -->
     },
     pinNonBase: function() {
-      this.pinned.push(this.base1.name + " " + this.valueNonBase + " = " + this.base2.name + " " + this.nonBaseResult)
+      this.pinned.push(this.base1name + " " + this.base1value + " = " + this.base2name + " " + this.nonBaseResult)
     },
     pinCurrencyToEuro: function() {
       this.pinned.push(this.eurosFromConversionRate.name + " " + this.eurosFrom + " = " + "EUR " + this.resultFrom)
@@ -122,19 +147,67 @@ export default {
 </script>
 
 <style lang="css" scoped>
+  .contain {
+    text-align: left;
+    /* border: 1px solid black; */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* justify-content: center; */
+    /* background-color:  */
+    font-size: 1.2em;
+  }
+
+  .select {
+    display: flex;
+    flex-direction: column;
+    margin: 5px;
+    align-items: center;
+    justify-content: center;
+    /* padding: 5px; */
+  }
+
+  /* form {
+    text-align: left;
+  } */
+  form {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    align-items: center;
+    /* justify-content: center; */
+    padding: 5%;
+    /* border: 1px solid black; */
+    width: 40vw;
+    text-align: left;
+    /* font-size: 1.2em; */
+  }
+
   select {
-    border: 1px solid black;
+    border: 1px solid white;
+    /* text-align: center; */
+    /* width: 100px; */
+  }
+
+  select:hover {
+    cursor: pointer;
   }
 
   .eurosinput {
-    border: 1px solid black;
+    border: 1px solid white;
   }
 
   input {
-    border: 1px solid black;
+    border-bottom: 1px solid white;
+    /* width: 60%; */
+    width: 135px;
   }
 
   button {
-    border: 1px solid black;
+    /* border: 1px solid white; */
+  }
+
+  button:hover {
+    border-bottom: 1px solid white;
   }
 </style>
