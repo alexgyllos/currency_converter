@@ -1,5 +1,7 @@
 # currency_converter
 
+<img style="width: 300px;" src="https://github.com/alexgyllos/files/blob/master/currencyconverterpreview.png" alt="currency converter preview">
+
 ## Project setup
 ```
 npm install
